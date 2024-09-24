@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL-like Database</title>
+</head>
+<body>
+<h1>SQL-like Database Interface</h1>
+
+<!-- Form for creating a table -->
+<h2>Create a Table</h2>
+<form action="/create_table" method="POST">
+    <label for="table_name">Table Name:</label>
+    <input type="text" id="table_name" name="table_name" required><br>
+
+    <label for="schema">Schema (in JSON-like format):</label>
+    <input type="text" id="schema" name="schema" required><br>
+
+    <input type="submit" value="Create Table">
+</form>
+
+<!-- Form for inserting a row -->
+<h2>Insert a Row</h2>
+<form action="/insert_row" method="POST">
+    <label for="table_name">Table Name:</label>
+    <input type="text" id="table_name" name="table_name" required><br>
+
+    <label for="row">Row Data (in JSON-like format):</label>
+    <input type="text" id="row" name="row" required><br>
+
+    <input type="submit" value="Insert Row">
+</form>
+
+<!-- Displaying a table content -->
+<h2>Display a Table</h2>
+<form action="/display_table" method="GET">
+    <label for="table_display">Table Name:</label>
+    <input type="text" id="table_display" name="table_display" required><br>
+
+    <button type="button" onclick="getTable()">Display Table</button>
+</form>
+
+<div id="table_contents"></div>
+
+<script>
+    function getTable() {
+        const tableName = document.getElementById('table_display').value;
+        fetch(`/display_table/${tableName}`)
+            .then(response => response.json())
+            .then(data => {
+                let tableContents = document.getElementById('table_contents');
+                if (data.error) {
+                    tableContents.innerHTML = `<p>Error: ${data.error}</p>`;
+                } else {
+                    let rows = data.rows.map(row => JSON.stringify(row)).join('<br>');
+                    tableContents.innerHTML = `<p>Rows:</p><p>${rows}</p>`;
+                }
+            });
+    }
+</script>
+</body>
+</html>
