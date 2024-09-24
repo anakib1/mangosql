@@ -44,7 +44,7 @@ class Database:
                 combined_row = {**row1, **row2}
                 new_table.insert(combined_row)
 
-        return new_table.display()
+        return new_table
 
     def save_to_json(self):
         """
@@ -84,3 +84,13 @@ class Database:
                 self.tables[table_name].insert(row)
 
         print(f"Database loaded from {self.filename}")
+
+    def delete_table(self, table_name):
+        """
+        Deletes a table from the database if it exists.
+        """
+        if table_name not in self.tables:
+            raise ValueError(f"Table {table_name} does not exist.")
+        del self.tables[table_name]
+        self.save_to_json()  # Save changes after deleting the table
+        return f"Table {table_name} has been deleted."

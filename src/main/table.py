@@ -58,6 +58,24 @@ class Table:
                 return False
         return True
 
+    def delete_row(self, condition):
+        """
+        Deletes a row from the table based on the condition provided.
+        Condition should be a dictionary with column name and value to match.
+        """
+        column, value = next(iter(condition.items()))  # Assuming one condition for simplicity
+        if column not in self.schema:
+            raise ValueError(f"Column {column} does not exist in the table schema.")
+
+        # Find the row that matches the condition
+        initial_row_count = len(self.rows)
+        self.rows = [row for row in self.rows if row.get(column) != value]
+
+        if len(self.rows) == initial_row_count:
+            raise ValueError(f"No row found matching {condition}")
+
+        return f"Row where {condition} has been deleted."
+
     def display(self):
         return self.rows
 

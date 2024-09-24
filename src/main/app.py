@@ -55,8 +55,31 @@ def api_display_table(table_name):
 @app.route('/api/product/<table1>/<table2>', methods=['GET'])
 def api_product(table1, table2):
     try:
-        result_rows = db.product(table1, table2)
+        result_rows = db.product(table1, table2).rows
         return jsonify({"rows": result_rows})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+# API: Delete a table
+@app.route('/api/delete_table/<table_name>', methods=['DELETE'])
+def api_delete_table(table_name):
+    try:
+        message = db.delete_table(table_name)
+        return jsonify({"message": message})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/delete_row/<table_name>', methods=['DELETE'])
+def api_delete_row(table_name):
+    try:
+        data = request.get_json()
+        condition = data.get('condition')  # Expecting a condition like {"id": 1}
+        table = db.get_table(table_name)
+        message = table.delete_row(condition)
+        db.save_to_json()  # Save changes after row deletion
+        return jsonify({"message": message})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

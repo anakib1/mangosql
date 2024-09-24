@@ -1,3 +1,4 @@
+import os
 import unittest
 from database import Database
 
@@ -5,7 +6,8 @@ from database import Database
 class TestDatabase(unittest.TestCase):
 
     def setUp(self):
-        self.db = Database()
+        os.remove('./School.json')
+        self.db = Database('School')
         self.db.create_table("students", {"id": "integer", "name": "string", "gpa": "real"})
         self.db.get_table("students").insert({"id": 1, "name": "Alice", "gpa": 3.5})
 
