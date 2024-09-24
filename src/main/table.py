@@ -19,6 +19,8 @@ class Table:
         if len(row) != len(self.schema):
             raise ValueError("Row length does not match table schema")
 
+        print(row)
+        print(self.schema)
         for col, value in row.items():
             if col not in self.schema:
                 raise ValueError(f"Column {col} not in schema")
@@ -34,14 +36,26 @@ class Table:
         """
         if expected_type == "integer" and not isinstance(value, int):
             return False
-        elif expected_type == "real" and not isinstance(value, float):
+        elif expected_type == "real" and not isinstance(value, (int, float)):
             return False
         elif expected_type == "char" and not isinstance(value, str) and len(value) != 1:
             return False
         elif expected_type == "string" and not isinstance(value, str):
             return False
-        elif expected_type == "date" and not isinstance(value, datetime):
-            return False
+        elif expected_type == "date":
+            try:
+                datetime.strptime(value, "%d.%m.%Y")  # Adjust format as needed
+                return True
+            except ValueError:
+                return False
+        elif expected_type == "dateInterval":
+            try:
+                start_date_str, end_date_str = value.split(";")
+                start_date = datetime.strptime(start_date_str, "%d.%m.%Y")
+                end_date = datetime.strptime(end_date_str, "%d.%m.%Y")
+                return start_date < end_date  # Ensure the first date is earlier than the second
+            except (ValueError, IndexError):
+                return False
         return True
 
     def display(self):

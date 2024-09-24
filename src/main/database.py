@@ -17,6 +17,7 @@ class Database:
         if name in self.tables:
             raise ValueError(f"Table {name} already exists.")
         self.tables[name] = Table(self, name, schema)
+        self.save_to_json()
 
     def get_table(self, name):
         """

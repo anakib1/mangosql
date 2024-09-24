@@ -11,21 +11,26 @@
             border-radius: 5px;
             display: none;
         }
+
         .success {
             color: green;
             border: 1px solid green;
         }
+
         .error {
             color: red;
             border: 1px solid red;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         table, th, td {
             border: 1px solid black;
         }
+
         th, td {
             padding: 8px;
             text-align: left;
@@ -33,85 +38,86 @@
     </style>
 </head>
 <body>
-    <h1>SQL-like Database GUI</h1>
+<h1>SQL-like Database GUI</h1>
 
-    <!-- Form to create a table -->
-    <h2>Create a Table</h2>
-    <form id="create-table-form">
-        <label for="table_name">Table Name:</label>
-        <input type="text" id="table_name" name="table_name" required>
-        <br>
+<!-- Form to create a table -->
+<h2>Create a Table</h2>
+<form id="create-table-form">
+    <label for="table_name">Table Name:</label>
+    <input type="text" id="table_name" name="table_name" required>
+    <br>
 
-        <h3>Table Schema</h3>
-        <div id="schema-fields">
-            <div class="schema-field">
-                <input type="text" placeholder="Column Name" class="column-name" required>
-                <select class="column-type">
-                    <option value="integer">Integer</option>
-                    <option value="real">Real</option>
-                    <option value="string">String</option>
-                    <option value="char">Char</option>
-                    <option value="date">Date</option>
-                </select>
-                <button type="button" class="remove-column" onclick="removeColumn(this)">Remove</button>
-            </div>
+    <h3>Table Schema</h3>
+    <div id="schema-fields">
+        <div class="schema-field">
+            <input type="text" placeholder="Column Name" class="column-name" required>
+            <select class="column-type">
+                <option value="integer">Integer</option>
+                <option value="real">Real</option>
+                <option value="string">String</option>
+                <option value="char">Char</option>
+                <option value="date">Date</option>
+                <option value="dateInterval">Date Interval</option> <!-- New option for dateInterval -->
+            </select>
+            <button type="button" class="remove-column" onclick="removeColumn(this)">Remove</button>
         </div>
-        <button type="button" id="add-column">Add Column</button>
-        <br>
-        <button type="submit">Create Table</button>
-    </form>
-    <div id="create-table-message" class="message"></div>
+    </div>
+    <button type="button" id="add-column">Add Column</button>
+    <br>
+    <button type="submit">Create Table</button>
+</form>
+<div id="create-table-message" class="message"></div>
 
-    <!-- Form to insert a row into a table -->
-    <h2>Insert a Row</h2>
-    <form id="insert-row-form">
-        <label for="table_name_insert">Table Name:</label>
-        <input type="text" id="table_name_insert" name="table_name_insert" required>
-        <button type="button" id="load-schema">Load Table Schema</button>
-        <br>
-        <div id="row-fields"></div>
-        <button type="submit" style="display:none;" id="insert-row-btn">Insert Row</button>
-    </form>
-    <div id="insert-row-message" class="message"></div>
+<!-- Form to insert a row into a table -->
+<h2>Insert a Row</h2>
+<form id="insert-row-form">
+    <label for="table_name_insert">Table Name:</label>
+    <input type="text" id="table_name_insert" name="table_name_insert" required>
+    <button type="button" id="load-schema">Load Table Schema</button>
+    <br>
+    <div id="row-fields"></div>
+    <button type="submit" style="display:none;" id="insert-row-btn">Insert Row</button>
+</form>
+<div id="insert-row-message" class="message"></div>
 
-    <!-- Form to display a table -->
-    <h2>Display a Table</h2>
-    <form id="display-table-form">
-        <label for="table_name_display">Table Name:</label>
-        <input type="text" id="table_name_display" name="table_name_display" required>
-        <br>
-        <button type="submit">Display Table</button>
-    </form>
-    <div id="display-table-message" class="message"></div>
-    <table id="table-display" style="display:none;">
-        <thead id="table-head"></thead>
-        <tbody id="table-body"></tbody>
-    </table>
+<!-- Form to display a table -->
+<h2>Display a Table</h2>
+<form id="display-table-form">
+    <label for="table_name_display">Table Name:</label>
+    <input type="text" id="table_name_display" name="table_name_display" required>
+    <br>
+    <button type="submit">Display Table</button>
+</form>
+<div id="display-table-message" class="message"></div>
+<table id="table-display" style="display:none;">
+    <thead id="table-head"></thead>
+    <tbody id="table-body"></tbody>
+</table>
 
-    <!-- Form to get the product of two tables -->
-    <h2>Product of Two Tables</h2>
-    <form id="product-tables-form">
-        <label for="table1">Table 1 Name:</label>
-        <input type="text" id="table1" name="table1" required>
-        <br>
-        <label for="table2">Table 2 Name:</label>
-        <input type="text" id="table2" name="table2" required>
-        <br>
-        <button type="submit">Get Product</button>
-    </form>
-    <div id="product-message" class="message"></div>
-    <table id="product-display" style="display:none;">
-        <thead id="product-head"></thead>
-        <tbody id="product-body"></tbody>
-    </table>
+<!-- Form to get the product of two tables -->
+<h2>Product of Two Tables</h2>
+<form id="product-tables-form">
+    <label for="table1">Table 1 Name:</label>
+    <input type="text" id="table1" name="table1" required>
+    <br>
+    <label for="table2">Table 2 Name:</label>
+    <input type="text" id="table2" name="table2" required>
+    <br>
+    <button type="submit">Get Product</button>
+</form>
+<div id="product-message" class="message"></div>
+<table id="product-display" style="display:none;">
+    <thead id="product-head"></thead>
+    <tbody id="product-body"></tbody>
+</table>
 
-    <script>
-        // Add schema field on "Add Column" button click
-        document.getElementById('add-column').addEventListener('click', function() {
-            const schemaFields = document.getElementById('schema-fields');
-            const div = document.createElement('div');
-            div.className = 'schema-field';
-            div.innerHTML = `
+<script>
+    // Add schema field on "Add Column" button click
+    document.getElementById('add-column').addEventListener('click', function () {
+        const schemaFields = document.getElementById('schema-fields');
+        const div = document.createElement('div');
+        div.className = 'schema-field';
+        div.innerHTML = `
                 <input type="text" placeholder="Column Name" class="column-name" required>
                 <select class="column-type">
                     <option value="integer">Integer</option>
@@ -122,34 +128,34 @@
                 </select>
                 <button type="button" class="remove-column" onclick="removeColumn(this)">Remove</button>
             `;
-            schemaFields.appendChild(div);
+        schemaFields.appendChild(div);
+    });
+
+    // Remove column field
+    function removeColumn(button) {
+        button.parentElement.remove();
+    }
+
+    // Handle table creation form
+    document.getElementById('create-table-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name').value;
+
+        // Collect schema from input fields
+        const schema = {};
+        document.querySelectorAll('.schema-field').forEach(field => {
+            const columnName = field.querySelector('.column-name').value;
+            const columnType = field.querySelector('.column-type').value;
+            schema[columnName] = columnType;
         });
 
-        // Remove column field
-        function removeColumn(button) {
-            button.parentElement.remove();
-        }
-
-        // Handle table creation form
-        document.getElementById('create-table-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const tableName = document.getElementById('table_name').value;
-
-            // Collect schema from input fields
-            const schema = {};
-            document.querySelectorAll('.schema-field').forEach(field => {
-                const columnName = field.querySelector('.column-name').value;
-                const columnType = field.querySelector('.column-type').value;
-                schema[columnName] = columnType;
-            });
-
-            fetch('/api/create_table', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ table_name: tableName, schema: schema })
-            })
+        fetch('/api/create_table', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({table_name: tableName, schema: schema})
+        })
             .then(response => response.json())
             .then(data => {
                 const messageElement = document.getElementById('create-table-message');
@@ -162,14 +168,13 @@
                 }
                 messageElement.style.display = 'block';
             });
-        });
+    });
 
-        // Load table schema for inserting a row
-        document.getElementById('load-schema').addEventListener('click', function(event) {
-            event.preventDefault();
-            const tableName = document.getElementById('table_name_insert').value;
+    document.getElementById('load-schema').addEventListener('click', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name_insert').value;
 
-            fetch(`/api/display_table/${tableName}`)
+        fetch(`/api/display_table/${tableName}`)
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -184,35 +189,87 @@
                 const schema = data.schema;
                 for (const column in schema) {
                     const div = document.createElement('div');
-                    div.innerHTML = `
-                        <label>${column} (${schema[column]}):</label>
-                        <input type="text" name="${column}" required>
+                    if (schema[column] === 'dateInterval') {
+                        // Create two date inputs for dateInterval
+                        div.innerHTML = `
+                        <label>${column} (Start Date):</label>
+                        <input type="date" name="${column}_start" required>
+                        <label>${column} (End Date):</label>
+                        <input type="date" name="${column}_end" required>
                     `;
+                    } else if (schema[column] === 'date') {
+                        // Create a single date input for date type
+                        div.innerHTML = `
+                        <label>${column} (${schema[column]}):</label>
+                        <input type="date" name="${column}" data-type="${schema[column]}" required>
+                    `;
+                    } else {
+                        // Create a text input for other types
+                        div.innerHTML = `
+                        <label>${column} (${schema[column]}):</label>
+                        <input type="text" name="${column}" data-type="${schema[column]}" required>
+                    `;
+                    }
                     rowFields.appendChild(div);
                 }
 
                 document.getElementById('insert-row-btn').style.display = 'inline-block';
             });
+    });
+
+
+    // Handle row insertion with date and dateInterval conversion to dd.mm.YYYY format
+    document.getElementById('insert-row-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name_insert').value;
+
+        // Function to convert a date from YYYY-MM-DD to dd.mm.YYYY format
+        function formatDate(dateString) {
+            const dateParts = dateString.split("-");
+            return `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}`;  // dd.mm.YYYY
+        }
+
+        // Collect row data from input fields and handle date/dateInterval type
+        const rowData = {};
+        document.querySelectorAll('#row-fields input').forEach(input => {
+            const fieldName = input.name;
+            const fieldType = input.dataset.type;
+
+            if (fieldName.endsWith('_start') || fieldName.endsWith('_end')) {
+                // Collect dateInterval inputs
+                const baseFieldName = fieldName.replace('_start', '').replace('_end', '');
+                if (!rowData[baseFieldName]) {
+                    rowData[baseFieldName] = ''; // Initialize the dateInterval field
+                }
+                if (fieldName.endsWith('_start')) {
+                    rowData[baseFieldName] = formatDate(input.value) + ';' + rowData[baseFieldName].split(';')[1];  // Set start date
+                } else {
+                    rowData[baseFieldName] = rowData[baseFieldName].split(';')[0] + ';' + formatDate(input.value);  // Set end date
+                }
+            } else if (fieldType === 'date') {
+                // Convert date input to dd.mm.YYYY format
+                rowData[fieldName] = formatDate(input.value);
+            } else {
+                // Handle other field types
+                const fieldValue = input.value;
+                if (fieldType === 'integer') {
+                    rowData[fieldName] = parseInt(fieldValue, 10);
+                } else if (fieldType === 'real') {
+                    rowData[fieldName] = parseFloat(fieldValue);
+                } else {
+                    rowData[fieldName] = fieldValue;  // Keep as string for other types
+                }
+            }
         });
 
-        // Handle row insertion
-        document.getElementById('insert-row-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const tableName = document.getElementById('table_name_insert').value;
-
-            // Collect row data from input fields
-            const rowData = {};
-            document.querySelectorAll('#row-fields input').forEach(input => {
-                rowData[input.name] = input.value;
-            });
-
-            fetch('/api/insert_row', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ table_name: tableName, row: rowData })
-            })
+        // Send the request to insert the row
+        fetch('/api/insert_row', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({table_name: tableName, row: rowData})  // Properly typed values in rowData
+        })
             .then(response => response.json())
             .then(data => {
                 const messageElement = document.getElementById('insert-row-message');
@@ -225,14 +282,13 @@
                 }
                 messageElement.style.display = 'block';
             });
-        });
+    });
+    // The other functionality for displaying tables and products remains unchanged
+    document.getElementById('display-table-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name_display').value;
 
-        // The other functionality for displaying tables and products remains unchanged
-        document.getElementById('display-table-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const tableName = document.getElementById('table_name_display').value;
-
-            fetch(`/api/display_table/${tableName}`)
+        fetch(`/api/display_table/${tableName}`)
             .then(response => response.json())
             .then(data => {
                 const tableElement = document.getElementById('table-display');
@@ -270,14 +326,14 @@
                     tableElement.style.display = 'table';
                 }
             });
-        });
+    });
 
-        document.getElementById('product-tables-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const table1 = document.getElementById('table1').value;
-            const table2 = document.getElementById('table2').value;
+    document.getElementById('product-tables-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const table1 = document.getElementById('table1').value;
+        const table2 = document.getElementById('table2').value;
 
-            fetch(`/api/product/${table1}/${table2}`)
+        fetch(`/api/product/${table1}/${table2}`)
             .then(response => response.json())
             .then(data => {
                 const tableElement = document.getElementById('product-display');
@@ -321,7 +377,7 @@
                     }
                 }
             });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
