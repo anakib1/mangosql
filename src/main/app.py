@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime
+
 from database import Database
+from table import Table
 
 app = Flask(__name__)
 
 # Initialize the database
-db = Database()
+db = Database('school')
 
 
 @app.route('/')
@@ -13,41 +15,48 @@ def index():
     return render_template('index.html')
 
 
-# Route for creating a new table
-@app.route('/create_table', methods=['POST'])
-def create_table():
-    table_name = request.form.get('table_name')
-    schema = request.form.get('schema')  # Expected format: {"col1": "integer", "col2": "string"}
+# API: Create a new table
+@app.route('/api/create_table', methods=['POST'])
+def api_create_table():
+    data = request.get_json()
+    table_name = data.get('table_name')
+    schema = data.get('schema')
     try:
-        schema_dict = eval(schema)  # You can replace this with a more secure parser
-        db.create_table(table_name, schema_dict)
-        return jsonify({"message": f"Table {table_name} created successfully!"})
+        db.create_table(table_name, schema)
+        return jsonify({"message": f"Table '{table_name}' created successfully!"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 
-# Route for inserting data into a table
-@app.route('/insert_row', methods=['POST'])
-def insert_row():
-    table_name = request.form.get('table_name')
-    row_data = request.form.get('row')  # Expected format: {"col1": 1, "col2": "Alice"}
+# API: Insert a new row into a table
+@app.route('/api/insert_row', methods=['POST'])
+def api_insert_row():
+    data = request.get_json()
+    table_name = data.get('table_name')
+    row = data.get('row')
     try:
-        row_dict = eval(row_data)
         table = db.get_table(table_name)
-        table.insert(row_dict)
+        table.insert(row)
         return jsonify({"message": "Row inserted successfully!"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 
-# Route for displaying the contents of a table
-@app.route('/display_table/<table_name>', methods=['GET'])
-def display_table(table_name):
+# API: Display the contents of a table
+@app.route('/api/display_table/<table_name>', methods=['GET'])
+def api_display_table(table_name):
     try:
         table = db.get_table(table_name)
-        schema = table.schema.keys()  # Column names
-        rows = table.display()  # Table rows
-        return render_template('display_table.html', table_name=table_name, schema=schema, rows=rows)
+        return jsonify({"schema": table.schema, "rows": table.display()})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/product/<table1>/<table2>', methods=['GET'])
+def api_product(table1, table2):
+    try:
+        result_rows = db.product(table1, table2)
+        return jsonify({"rows": result_rows})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

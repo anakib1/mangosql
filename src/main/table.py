@@ -2,13 +2,14 @@ from datetime import datetime
 
 
 class Table:
-    def __init__(self, name, schema):
+    def __init__(self, db, name, schema):
         """
         Initializes the table with a name and schema (dictionary of column_name: data_type).
         """
         self.name = name
         self.schema = schema  # A dictionary like {"id": "integer", "name": "string"}
         self.rows = []
+        self.db = db
 
     def insert(self, row):
         """
@@ -22,9 +23,10 @@ class Table:
             if col not in self.schema:
                 raise ValueError(f"Column {col} not in schema")
             if not self._validate_type(self.schema[col], value):
-                raise ValueError(f"Invalid data type for column {col}")
+                raise ValueError(f"Invalid data type for column {col}. Given: {value}")
 
         self.rows.append(row)
+        self.db.save_to_json()
 
     def _validate_type(self, expected_type, value):
         """
@@ -43,6 +45,9 @@ class Table:
         return True
 
     def display(self):
+        return self.rows
+
+    def __str__(self):
         """
         Displays the table content in a tabular form.
         """
