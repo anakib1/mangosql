@@ -67,7 +67,30 @@
     <button type="submit">Create Table</button>
 </form>
 <div id="create-table-message" class="message"></div>
+<!-- Form to delete a table -->
+<h2>Delete a Table</h2>
+<form id="delete-table-form">
+    <label for="table_name_delete">Table Name:</label>
+    <input type="text" id="table_name_delete" name="table_name_delete" required>
+    <button type="submit">Delete Table</button>
+</form>
+<div id="delete-table-message" class="message"></div>
 
+<!-- Form to delete a row from a table -->
+<h2>Delete a Row</h2>
+<form id="delete-row-form">
+    <label for="table_name_row_delete">Table Name:</label>
+    <input type="text" id="table_name_row_delete" name="table_name_row_delete" required>
+    <br>
+    <label for="condition_key">Condition Key (e.g., id):</label>
+    <input type="text" id="condition_key" name="condition_key" required>
+    <br>
+    <label for="condition_value">Condition Value (e.g., 1):</label>
+    <input type="text" id="condition_value" name="condition_value" required>
+    <br>
+    <button type="submit">Delete Row</button>
+</form>
+<div id="delete-row-message" class="message"></div>
 <!-- Form to insert a row into a table -->
 <h2>Insert a Row</h2>
 <form id="insert-row-form">
@@ -283,6 +306,61 @@
                 messageElement.style.display = 'block';
             });
     });
+
+    // Handle table deletion
+    document.getElementById('delete-table-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name_delete').value;
+
+        fetch(`/api/delete_table/${tableName}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(data => {
+                const messageElement = document.getElementById('delete-table-message');
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                    messageElement.className = 'message error';
+                } else {
+                    messageElement.textContent = data.message;
+                    messageElement.className = 'message success';
+                }
+                messageElement.style.display = 'block';
+            });
+    });
+
+    // Handle row deletion
+    document.getElementById('delete-row-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const tableName = document.getElementById('table_name_row_delete').value;
+        const conditionKey = document.getElementById('condition_key').value;
+        const conditionValue = document.getElementById('condition_value').value;
+
+        // Construct the condition object dynamically
+        const condition = {};
+        condition[conditionKey] = isNaN(conditionValue) ? conditionValue : parseInt(conditionValue);
+
+        fetch(`/api/delete_row/${tableName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({condition: condition})
+        })
+            .then(response => response.json())
+            .then(data => {
+                const messageElement = document.getElementById('delete-row-message');
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                    messageElement.className = 'message error';
+                } else {
+                    messageElement.textContent = data.message;
+                    messageElement.className = 'message success';
+                }
+                messageElement.style.display = 'block';
+            });
+    });
+
     // The other functionality for displaying tables and products remains unchanged
     document.getElementById('display-table-form').addEventListener('submit', function (event) {
         event.preventDefault();
