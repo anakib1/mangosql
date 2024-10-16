@@ -5,6 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL-like Database GUI</title>
     <style>
+        /* Define colors and reusable styles with CSS variables */
+        :root {
+            --primary-color: #6200ee;
+            --secondary-color: #03dac6;
+            --error-color: #b00020;
+            --success-color: #2e7d32;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="date"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+        }
+
         .message {
             margin-top: 10px;
             padding: 10px;
@@ -13,27 +79,27 @@
         }
 
         .success {
-            color: green;
-            border: 1px solid green;
+            background-color: var(--success-color);
+            color: white;
+            border: 1px solid var(--success-color);
         }
 
         .error {
-            color: red;
-            border: 1px solid red;
+            background-color: var(--error-color);
+            color: white;
+            border: 1px solid var(--error-color);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        /* Add some styles for responsiveness */
+        @media (max-width: 600px) {
+            form {
+                padding: 15px;
+            }
 
-        table, th, td {
-            border: 1px solid black;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
+            button {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
         }
     </style>
 </head>

@@ -1,0 +1,12 @@
+{
+  "name": "mango-sql",
+  "version": "1.0.0",
+  "description": "Electron wrapped Mango SQL app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^<current-version>"
+  }
+}
